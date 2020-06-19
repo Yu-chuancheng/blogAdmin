@@ -1,6 +1,7 @@
 'use strict'
 const path = require('path')
 const defaultSettings = require('./src/settings.js')
+const webpack = require('webpack')
 
 function resolve(dir) {
   return path.join(__dirname, dir)
@@ -123,6 +124,9 @@ module.exports = {
               }
             })
           config.optimization.runtimeChunk('single')
+          config.plugin('provide').use(webpack.ProvidePlugin, [{
+            'window.Quill': 'quill'
+          }])
         }
       )
   }
