@@ -16,15 +16,17 @@
 </template>
 
 <script>
-import 'quill/dist/quill.core.css'
-import 'quill/dist/quill.snow.css'
-import 'quill/dist/quill.bubble.css'
-import { quillEditor } from 'vue-quill-editor'
-import { ImageResize, ImageExtend } from 'quill-image-extend-module'
-Quill.register('modules/ImageExtend', ImageExtend)
-Quill.register('modules/ImageResize', ImageResize)
+import "quill/dist/quill.core.css";
+import "quill/dist/quill.snow.css";
+import "quill/dist/quill.bubble.css";
+import { quillEditor } from "vue-quill-editor";
+// import { ImageResize, ImageExtend } from 'quill-image-extend-module'
+import {ImageDrop} from "quill-image-drop-module";
+import ImageResize from "quill-image-resize-module";
+Quill.register("modules/imageDrop", ImageDrop);
+Quill.register("modules/imageResize", ImageResize);
 export default {
-  name: 'Editor',
+  name: "Editor",
   components: {
     quillEditor
   },
@@ -35,77 +37,78 @@ export default {
     },
     defaultContent: {
       type: String,
-      default: ''
+      default: ""
     }
   },
-  data: function() {
+  data() {
     return {
       content: this.defaultContent,
       editorOption: {
-        placeholder: 'Hello World',
+        placeholder: "Hello World",
         modules: {
+          imageDrop: true,
           imageResize: {
             displayStyles: {
-              backgroundColor: 'black',
-              border: 'none',
-              color: 'white'
+              backgroundColor: "black",
+              border: "none",
+              color: "white"
             },
-            modules: ['Resize', 'DisplaySize', 'Toolbar']
+            modules: ["Resize", "DisplaySize", "Toolbar"]
           },
           toolbar: {
             container: [
-              ['bold', 'italic', 'underline', 'strike'],
-              ['blockquote', 'code-block'],
-              [{ list: 'ordered' }, { list: 'bullet' }],
-              [{ indent: '-1' }, { indent: '+1' }],
+              ["bold", "italic", "underline", "strike"],
+              ["blockquote", "code-block"],
+              [{ list: "ordered" }, { list: "bullet" }],
+              [{ indent: "-1" }, { indent: "+1" }],
               [{ color: [] }, { background: [] }],
               [{ align: [] }],
-              ['link', 'image'],
-              ['clean']
+              ["link", "image"],
+              ["clean"]
             ],
             handlers: {
               image: value => {
-                const node = document.getElementById('el_upload')
-                node.childNodes[0].childNodes[0].click()
+                const node = document.getElementById("el_upload");
+                node.childNodes[0].childNodes[0].click();
               }
             }
           }
         }
       },
       fileList: []
-    }
+    };
   },
   methods: {
     onEditorChange({ editor, html, text }) {
-      this.content = html
+      this.content = html;
     },
     uploadResult(file) {
       try {
-        const imageUrl = file.response.url
+        const imageUrl = file.response.url;
         // 获取富文本组件实例
-        const quill = this.$refs.myTextEditor.quill
+        const quill = this.$refs.myTextEditor.quill;
         // 如果上传成功
         if (imageUrl) {
           // 获取光标所在位置
-          const length = quill.getSelection().index // 插入图片 res.info为服务器返回的图片地址
+          const length = quill.getSelection().index; // 插入图片 res.info为服务器返回的图片地址
           quill.insertEmbed(
             length,
-            'image',
-            'http://localhost:7001' + imageUrl
-          ) // 调整光标到最后
-          quill.setSelection(length + 1)
+            "image",
+            "http://localhost:7001" + imageUrl
+          ); // 调整光标到最后
+          quill.setSelection(length + 1);
         } else {
-          this.$message.error('图片插入失败')
+          this.$message.error("图片插入失败");
         } // loading动画消失
       } catch (error) {
-        this.$message.error(error)
+        this.$message.error(error);
       }
     },
     submit() {
-      this.$emit('submit', this.content)
+      this.$emit("submit", this.content);
     }
   }
-}
+};
 </script>
 <style scoped>
 .editor-btn {
