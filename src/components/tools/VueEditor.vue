@@ -21,9 +21,7 @@ import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
 import { quillEditor } from "vue-quill-editor";
 // import { ImageResize, ImageExtend } from 'quill-image-extend-module'
-import {ImageDrop} from "quill-image-drop-module";
 import ImageResize from "quill-image-resize-module";
-Quill.register("modules/imageDrop", ImageDrop);
 Quill.register("modules/imageResize", ImageResize);
 export default {
   name: "Editor",
@@ -46,7 +44,6 @@ export default {
       editorOption: {
         placeholder: "Hello World",
         modules: {
-          imageDrop: true,
           imageResize: {
             displayStyles: {
               backgroundColor: "black",
